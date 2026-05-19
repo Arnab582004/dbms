@@ -1,13 +1,3 @@
--- =========================================================
--- FINAL DATABASE SETUP FOR DAY 7
--- (Run in order)
--- =========================================================
-
-
-
--- =========================================================
--- 1. CREATE LOCATIONS TABLE
--- =========================================================
 
 CREATE TABLE locations
 (
@@ -19,12 +9,6 @@ CREATE TABLE locations
     area VARCHAR2(30)
 );
 
-
-
-
--- =========================================================
--- 2. INSERT INTO LOCATIONS
--- =========================================================
 
 INSERT INTO locations VALUES
 (1700,'Toronto','Canada');
@@ -42,12 +26,6 @@ COMMIT;
 
 
 
-
-
--- =========================================================
--- 3. CREATE DEPARTMENTS TABLE
--- =========================================================
-
 CREATE TABLE departments
 (
     dept_id NUMBER(5) PRIMARY KEY,
@@ -61,13 +39,6 @@ CREATE TABLE departments
     REFERENCES locations(location_name)
 );
 
-
-
-
-
--- =========================================================
--- 4. INSERT INTO DEPARTMENTS
--- =========================================================
 
 INSERT INTO departments VALUES
 (10,'Executive','Toronto');
@@ -83,14 +54,6 @@ INSERT INTO departments VALUES
 
 COMMIT;
 
-
-
-
-
-
--- =========================================================
--- 5. CREATE EMP TABLE
--- =========================================================
 
 CREATE TABLE emp
 (
@@ -120,14 +83,6 @@ CREATE TABLE emp
     REFERENCES departments(dept_id)
 );
 
-
-
-
-
-
--- =========================================================
--- 6. INSERT INTO EMP
--- =========================================================
 
 INSERT INTO emp VALUES
 (
@@ -290,14 +245,6 @@ TO_DATE('01-04-2020','DD-MM-YYYY'),
 COMMIT;
 
 
-
-
-
-
--- =========================================================
--- 7. CREATE JOB_GRADES TABLE
--- =========================================================
-
 CREATE TABLE job_grades
 (
     grade_level VARCHAR2(5),
@@ -307,14 +254,6 @@ CREATE TABLE job_grades
     highest_sal NUMBER
 );
 
-
-
-
-
-
--- =========================================================
--- 8. INSERT INTO JOB_GRADES
--- =========================================================
 
 INSERT INTO job_grades VALUES
 ('A',0,2999);
@@ -337,18 +276,100 @@ INSERT INTO job_grades VALUES
 COMMIT;
 
 
-
-
-
-
--- =========================================================
--- VERIFY ALL TABLES
--- =========================================================
-
 SELECT * FROM locations;
 
 SELECT * FROM departments;
 
 SELECT * FROM emp;
 
+-------------Queries
+1a)
+CREATE VIEW emp_vu AS
+
+SELECT
+
+emp_id,
+
+emp_name AS employee,
+
+dept_no
+
+FROM emp;
+
+
 SELECT * FROM job_grades;
+
+1b)
+SELECT * FROM emp_vu;
+
+2b)
+CREATE VIEW dept50
+(
+empno,
+employee,
+deptno
+)
+
+AS
+
+SELECT
+
+emp_id,
+
+emp_name,
+
+dept_no
+
+FROM emp
+
+WHERE dept_no = 50;
+
+2b)
+DESC dept50;
+SELECT * FROM dept50;
+
+2c)
+UPDATE emp
+
+SET dept_no = 80
+
+WHERE emp_name = 'Matos';
+
+COMMIT;
+
+3)
+CREATE VIEW salary_vu AS
+
+SELECT
+
+e.emp_name,
+
+d.dept_name,
+
+e.salary,
+
+j.grade_level
+
+FROM emp e
+
+JOIN departments d
+ON e.dept_no = d.dept_id
+
+JOIN job_grades j
+ON e.salary BETWEEN j.lowest_sal AND j.highest_sal;
+
+4)
+GRANT SELECT
+
+ON departments
+
+TO other_user;
+
+5)CREATE SYNONYM dept_syn
+
+FOR other_user.departments;
+
+6)SELECT *
+
+FROM dept_syn;
+
